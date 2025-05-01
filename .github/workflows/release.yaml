@@ -1,0 +1,52 @@
+---
+name: Build and publish
+
+on:
+  release:
+    types:
+      - published
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compute tag
+        id: release-tag
+        run: |
+          echo "kairos_init_version=$(grep "^FROM quay.io/kairos/kairos-init:" image/Dockerfile | cut -d':' -f2 | awk -F '[@]' '{print $1}')"
+          echo "k3s_version=$(grep "^ARG KUBERNETES_VERSION=" image/Dockerfile | cut -d'=' -f2)"
+          tag=9-standard-amd64-generic-"${kairos_init_version}"-"${k3s_version}"
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+
+      - name: Extract tags and labels
+        id: meta
+        uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5
+        with:
+          images: ${{ env.REGISTRY }}/ucl-arc/kairos-almalinux
+
+      - name: Build and push image
+        uses: docker/build-push-action@14487ce63c7a62a4a324b0bfb37086795e31c6c1 # v5
+        with:
+          context: .
+          file: image/Dockerfile
+          push: true
+          tags: ${{ steps.release-tag.outputs.tag }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            "VERSION=${{ github.event.release.tag_name }}"

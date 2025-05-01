@@ -1,0 +1,57 @@
+FROM quay.io/kairos/kairos-init:v0.4.7@sha256:fc9564833491c504e30f5894dfab3c6fd394fe6f02491553722ff9cb10fedd6e AS kairos-init
+
+FROM almalinux:9.5@sha256:6308a739192c0d3d4cf69fd7b226441ceb876ed5321264accfe852be7f71670f AS base-kairos
+
+# renovate: datasource=github-releases depName=kairos-io/kairos-framework
+ARG FRAMEWORK_VERSION=v2.21.0
+ARG KUBERNETES_DISTRO=k3s
+# renovate: datasource=custom.k3s depName=k3s
+ARG KUBERNETES_VERSION=v1.32.3+k3s1
+ARG MODEL=generic
+ARG TRUSTED_BOOT=false
+ARG VARIANT=standard
+ARG VERSION
+
+COPY --from=kairos-init /kairos-init /kairos-init
+
+# hadolint ignore=DL3059
+RUN /kairos-init \
+  -s install \
+  -f "${FRAMEWORK_VERSION}" \
+  --fips \
+  -k "${KUBERNETES_DISTRO}" \
+  --k8sversion "${KUBERNETES_VERSION}" \
+  -l debug \
+  -m "${MODEL}" \
+  -t "${TRUSTED_BOOT}" \
+  -v "${VARIANT}" \
+  --version "${VERSION}"
+
+# hadolint ignore=DL3059
+RUN /kairos-init \
+  -s init \
+  -f "${FRAMEWORK_VERSION}" \
+  --fips \
+  -k "${KUBERNETES_DISTRO}" \
+  --k8sversion "${KUBERNETES_VERSION}" \
+  -l debug \
+  -m "${MODEL}" \
+  -t "${TRUSTED_BOOT}" \
+  -v "${VARIANT}" \
+  --version "${VERSION}"
+
+# hadolint ignore=DL3059
+RUN /kairos-init \
+  --validate \
+  -f "${FRAMEWORK_VERSION}" \
+  --fips \
+  -k "${KUBERNETES_DISTRO}" \
+  --k8sversion "${KUBERNETES_VERSION}" \
+  -l debug \
+  -m "${MODEL}" \
+  -t "${TRUSTED_BOOT}" \
+  -v "${VARIANT}" \
+  --version "${VERSION}"
+
+# hadolint ignore=DL3059
+RUN rm /kairos-init
