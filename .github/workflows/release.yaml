@@ -46,7 +46,9 @@ jobs:
           context: .
           file: image/Dockerfile
           push: true
-          tags: ${{ steps.release-tag.outputs.tag }}
+          tags:
+            ${{ env.REGISTRY }}/ucl-arc/kairos-almalinux:${{
+            steps.release-tag.outputs.tag }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             "VERSION=${{ github.event.release.tag_name }}"
