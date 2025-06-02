@@ -31,7 +31,7 @@ jobs:
         run: |
           kairos_init_version=$(grep "^FROM quay.io/kairos/kairos-init:" image/Dockerfile | cut -d':' -f2 | awk -F '[@]' '{print $1}')
           k3s_version=$(grep "^ARG KUBERNETES_VERSION=" image/Dockerfile | cut -d'=' -f2)
-          tag=9-standard-amd64-generic-"${kairos_init_version}"-k3s"${k3s_version}"
+          tag=10-standard-amd64-generic-"${kairos_init_version}"-k3s"${k3s_version}"
           echo "tag=${tag//+/-}" >> "$GITHUB_OUTPUT"
 
       - name: Extract tags and labels
