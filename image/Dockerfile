@@ -16,7 +16,6 @@ COPY --from=kairos-init /kairos-init /kairos-init
 # hadolint ignore=DL3059
 RUN /kairos-init \
   -s install \
-  -f "${FRAMEWORK_VERSION}" \
   --fips \
   -k "${KUBERNETES_DISTRO}" \
   --k8sversion "${KUBERNETES_VERSION}" \
@@ -37,7 +36,6 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/s
 # hadolint ignore=DL3059
 RUN /kairos-init \
   -s init \
-  -f "${FRAMEWORK_VERSION}" \
   --fips \
   -k "${KUBERNETES_DISTRO}" \
   --k8sversion "${KUBERNETES_VERSION}" \
@@ -49,7 +47,6 @@ RUN /kairos-init \
 # hadolint ignore=DL3059
 RUN /kairos-init \
   --validate \
-  -f "${FRAMEWORK_VERSION}" \
   --fips \
   -k "${KUBERNETES_DISTRO}" \
   --k8sversion "${KUBERNETES_VERSION}" \
