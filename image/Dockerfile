@@ -8,9 +8,7 @@ ARG KUBERNETES_DISTRO=k3s
 # renovate: datasource=custom.k3s depName=k3s
 ARG KUBERNETES_VERSION=v1.32.3+k3s1
 ARG MODEL=generic
-ARG REGISTRY=ghcr.io/ucl-arc
 ARG TRUSTED_BOOT=false
-ARG VARIANT=standard
 ARG VERSION
 
 COPY --from=kairos-init /kairos-init /kairos-init
@@ -24,9 +22,7 @@ RUN /kairos-init \
   --k8sversion "${KUBERNETES_VERSION}" \
   -l debug \
   -m "${MODEL}" \
-  -r "${REGISTRY}" \
   -t "${TRUSTED_BOOT}" \
-  -v "${VARIANT}" \
   --version "${VERSION}"
 
 RUN dnf update && dnf install -y \
@@ -47,9 +43,7 @@ RUN /kairos-init \
   --k8sversion "${KUBERNETES_VERSION}" \
   -l debug \
   -m "${MODEL}" \
-  -r "${REGISTRY}" \
   -t "${TRUSTED_BOOT}" \
-  -v "${VARIANT}" \
   --version "${VERSION}"
 
 # hadolint ignore=DL3059
@@ -61,9 +55,7 @@ RUN /kairos-init \
   --k8sversion "${KUBERNETES_VERSION}" \
   -l debug \
   -m "${MODEL}" \
-  -r "${REGISTRY}" \
   -t "${TRUSTED_BOOT}" \
-  -v "${VARIANT}" \
   --version "${VERSION}"
 
 # hadolint ignore=DL3059
