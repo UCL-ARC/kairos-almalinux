@@ -1,4 +1,4 @@
-FROM quay.io/kairos/kairos-init:v0.4.7@sha256:fc9564833491c504e30f5894dfab3c6fd394fe6f02491553722ff9cb10fedd6e AS kairos-init
+FROM quay.io/kairos/kairos-init:v0.5.1@sha256:651515ad4dd669f4cc467efc457f5b9179035e48d4d21e5f8b11c30e0e290b77 AS kairos-init
 
 FROM almalinux:9@sha256:e909867582ddb6256b90113dd3de19150b968a565affbd898b9f0db358c2d0ab AS base-kairos
 
@@ -8,9 +8,7 @@ ARG KUBERNETES_DISTRO=k3s
 # renovate: datasource=custom.k3s depName=k3s
 ARG KUBERNETES_VERSION=v1.32.3+k3s1
 ARG MODEL=generic
-ARG REGISTRY=ghcr.io/ucl-arc
 ARG TRUSTED_BOOT=false
-ARG VARIANT=standard
 ARG VERSION
 
 COPY --from=kairos-init /kairos-init /kairos-init
@@ -18,15 +16,12 @@ COPY --from=kairos-init /kairos-init /kairos-init
 # hadolint ignore=DL3059
 RUN /kairos-init \
   -s install \
-  -f "${FRAMEWORK_VERSION}" \
   --fips \
   -k "${KUBERNETES_DISTRO}" \
   --k8sversion "${KUBERNETES_VERSION}" \
   -l debug \
   -m "${MODEL}" \
-  -r "${REGISTRY}" \
   -t "${TRUSTED_BOOT}" \
-  -v "${VARIANT}" \
   --version "${VERSION}"
 
 RUN dnf update && dnf install -y \
@@ -41,30 +36,16 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/s
 # hadolint ignore=DL3059
 RUN /kairos-init \
   -s init \
-  -f "${FRAMEWORK_VERSION}" \
   --fips \
   -k "${KUBERNETES_DISTRO}" \
   --k8sversion "${KUBERNETES_VERSION}" \
   -l debug \
   -m "${MODEL}" \
-  -r "${REGISTRY}" \
   -t "${TRUSTED_BOOT}" \
-  -v "${VARIANT}" \
   --version "${VERSION}"
 
 # hadolint ignore=DL3059
-RUN /kairos-init \
-  --validate \
-  -f "${FRAMEWORK_VERSION}" \
-  --fips \
-  -k "${KUBERNETES_DISTRO}" \
-  --k8sversion "${KUBERNETES_VERSION}" \
-  -l debug \
-  -m "${MODEL}" \
-  -r "${REGISTRY}" \
-  -t "${TRUSTED_BOOT}" \
-  -v "${VARIANT}" \
-  --version "${VERSION}"
+RUN /kairos-init validate -t "${TRUSTED_BOOT}"
 
 # hadolint ignore=DL3059
 RUN rm /kairos-init
