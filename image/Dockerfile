@@ -45,15 +45,7 @@ RUN /kairos-init \
   --version "${VERSION}"
 
 # hadolint ignore=DL3059
-RUN /kairos-init \
-  validate \
-  --fips \
-  -k "${KUBERNETES_DISTRO}" \
-  --k8sversion "${KUBERNETES_VERSION}" \
-  -l debug \
-  -m "${MODEL}" \
-  -t "${TRUSTED_BOOT}" \
-  --version "${VERSION}"
+RUN /kairos-init validate -t "${TRUSTED_BOOT}"
 
 # hadolint ignore=DL3059
 RUN rm /kairos-init
