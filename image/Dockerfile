@@ -24,6 +24,7 @@ RUN /kairos-init \
   -t "${TRUSTED_BOOT}" \
   --version "${VERSION}"
 
+# hadolint ignore=DL3041
 RUN dnf update && dnf install -y \
   python3-pip && \
   dnf clean all
