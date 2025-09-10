@@ -1,6 +1,6 @@
 FROM quay.io/kairos/kairos-init:v0.6.0@sha256:b326c95650bd4c68422330f414a03e0a7f0f89620194eb30d75f19183016d4ba AS kairos-init
 
-FROM almalinux:10@sha256:cc72366a50248e0f985d80adeefc00b7a6593a192d504de7e66041619caf8bb9 AS base-kairos
+FROM almalinux:10@sha256:a81adef1de0ec017d2f483e6acedf6da4c060a93716192c23cac052386e48035 AS base-kairos
 
 # renovate: datasource=github-releases depName=kairos-io/kairos-framework
 ARG FRAMEWORK_VERSION=v2.21.0
