@@ -30,7 +30,7 @@ RUN dnf update && dnf install -y \
 
 RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 && \
   chmod 700 get_helm.sh && \
-  HELM_INSTALL_DIR=/usr/bin ./get_helm.sh && \
+  HELM_INSTALL_DIR=/usr/bin VERIFY_CHECKSUM=false ./get_helm.sh && \
   rm get_helm.sh
 
 # hadolint ignore=DL3059
