@@ -17,6 +17,13 @@ jobs:
       contents: read
       packages: write
 
+    strategy:
+      max-parallel: 1
+      matrix:
+        distro:
+          - alma9
+          - alma10
+
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v4
 
@@ -29,9 +36,9 @@ jobs:
       - name: Compute tag
         id: release-tag
         run: |
-          kairos_init_version=$(grep "^FROM quay.io/kairos/kairos-init:" image/Dockerfile | cut -d':' -f2 | awk -F '[@]' '{print $1}')
-          k3s_version=$(grep "^ARG KUBERNETES_VERSION=" image/Dockerfile | cut -d'=' -f2)
-          alma_major_version=$(grep "^FROM almalinux:" image/Dockerfile | cut -d':' -f2 | awk -F '[@]' '{print $1}')
+          kairos_init_version=$(grep "^FROM quay.io/kairos/kairos-init:" images/Dockerfile.${{ matrix.distro }} | cut -d':' -f2 | awk -F '[@]' '{print $1}')
+          k3s_version=$(grep "^ARG KUBERNETES_VERSION=" images/Dockerfile.${{ matrix.distro }} | cut -d'=' -f2)
+          alma_major_version=$(grep "^FROM almalinux:" images/Dockerfile.${{ matrix.distro }} | cut -d':' -f2 | awk -F '[@]' '{print $1}')
           tag="${alma_major_version}"-standard-amd64-generic-"${kairos_init_version}"-k3s"${k3s_version}"
           echo "tag=${tag//+/-}" >> "$GITHUB_OUTPUT"
 
@@ -45,7 +52,7 @@ jobs:
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v5
         with:
           context: .
-          file: image/Dockerfile
+          file: images/Dockerfile.${{ matrix.distro }}
           push: true
           tags:
             ${{ env.REGISTRY }}/ucl-arc/kairos-almalinux:${{
