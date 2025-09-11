@@ -42,7 +42,7 @@ jobs:
           tag="${alma_major_version}"-standard-amd64-generic-"${kairos_init_version}"-k3s"${k3s_version}"
           release_tag="${{ github.event.release.tag_name }}"
           echo "tag=${tag//+/-}" >> "$GITHUB_OUTPUT"
-          echo "kairos_version=${alma_major_version}.${release_tag//.}" >> "$GITHUB_OUTPUT"
+          echo "kairos_version=${alma_major_version}.${release_tag}" >> "$GITHUB_OUTPUT"
 
       - name: Extract tags and labels
         id: meta
