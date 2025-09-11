@@ -8,7 +8,7 @@ The Docker tags are constructed as follows:
 `<almalinux-major-version>-standard-amd64-generic-<kairos-init-version>-k3s<k3s-version>`
 
 The repository release tag uses the release date in `YYYYMMDD` format, suffixed
-with a with a revision number (e.g. `20250911.2`).
+with a with a revision number (e.g. `20250911.1`).
 
 The `VERSION` build argument is used by
 [`kairos-init`](https://github.com/kairos-io/kairos-init) to populate the
@@ -18,4 +18,4 @@ important for triggering upgrades using the
 [`system-upgrade-controller`](https://github.com/rancher/system-upgrade-controller).
 In this repository it is constructed when the
 [`release.yaml`](.github/workflows/release.yaml) workflow executes by combining
-the Almalinux major version and the Github release tag (e.g. `9.20250911.2`).
+the Almalinux major version and the Github release tag (e.g. `9.20250911.1`).
