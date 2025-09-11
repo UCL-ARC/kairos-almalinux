@@ -40,6 +40,7 @@ jobs:
           k3s_version=$(grep "^ARG KUBERNETES_VERSION=" images/Dockerfile.${{ matrix.distro }} | cut -d'=' -f2)
           alma_major_version=$(grep "^FROM almalinux:" images/Dockerfile.${{ matrix.distro }} | cut -d':' -f2 | awk -F '[@]' '{print $1}')
           tag="${alma_major_version}"-standard-amd64-generic-"${kairos_init_version}"-k3s"${k3s_version}"
+          echo "alma_major_version=$alma_major_version" >> "$GITHUB_OUTPUT"
           echo "tag=${tag//+/-}" >> "$GITHUB_OUTPUT"
 
       - name: Extract tags and labels
@@ -59,4 +60,4 @@ jobs:
             steps.release-tag.outputs.tag }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            "VERSION=${{ github.event.release.tag_name }}"
+            "VERSION=${{ steps.release-tag.outputs.alma_major_version }}.${{ github.event.release.tag_name }}"
