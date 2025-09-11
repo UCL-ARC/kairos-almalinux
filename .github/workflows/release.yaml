@@ -33,15 +33,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Compute tag
+      - name: Compute tag and kairos version
         id: release-tag
         run: |
           kairos_init_version=$(grep "^FROM quay.io/kairos/kairos-init:" images/Dockerfile.${{ matrix.distro }} | cut -d':' -f2 | awk -F '[@]' '{print $1}')
           k3s_version=$(grep "^ARG KUBERNETES_VERSION=" images/Dockerfile.${{ matrix.distro }} | cut -d'=' -f2)
           alma_major_version=$(grep "^FROM almalinux:" images/Dockerfile.${{ matrix.distro }} | cut -d':' -f2 | awk -F '[@]' '{print $1}')
           tag="${alma_major_version}"-standard-amd64-generic-"${kairos_init_version}"-k3s"${k3s_version}"
-          echo "alma_major_version=$alma_major_version" >> "$GITHUB_OUTPUT"
+          release_tag="${{ github.event.release.tag_name }}"
           echo "tag=${tag//+/-}" >> "$GITHUB_OUTPUT"
+          echo "kairos_version=${alma_major_version}.${release_tag//.}" >> "$GITHUB_OUTPUT"
 
       - name: Extract tags and labels
         id: meta
@@ -60,4 +61,4 @@ jobs:
             steps.release-tag.outputs.tag }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            "VERSION=${{ steps.release-tag.outputs.alma_major_version }}.${{ github.event.release.tag_name }}"
+            "VERSION=${{ steps.release-tag.outputs.kairos_version }}"
