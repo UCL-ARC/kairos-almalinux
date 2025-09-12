@@ -30,6 +30,16 @@ RUN dnf update && dnf install -y \
   python3-pip && \
   dnf clean all
 
+# hadolint ignore=DL3059
+RUN python3 -m pip install --no-cache-dir --upgrade pip==25.2
+
+# hadolint ignore=DL3059
+RUN python3 -m pip install --no-cache-dir \
+  packaging==25.0 \
+  requests==2.32.5 \
+  setuptools==80.9.0 \
+  wheel==0.45.1
+
 RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 && \
   chmod 700 get_helm.sh && \
   HELM_INSTALL_DIR=/usr/bin VERIFY_CHECKSUM=false ./get_helm.sh && \
