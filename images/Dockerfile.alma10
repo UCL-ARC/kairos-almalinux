@@ -31,10 +31,10 @@ RUN dnf update && dnf install -y \
   dnf clean all
 
 # hadolint ignore=DL3013,DL3059
-RUN python3 -m pip install --no-cache-dir --upgrade pip
+RUN python3 -m pip install --no-cache-dir --target /usr/lib/python3.12/site-packages --upgrade pip
 
 # hadolint ignore=DL3013,DL3059
-RUN python3 -m pip install --no-cache-dir \
+RUN python3 -m pip install --no-cache-dir --target /usr/lib/python3.12/site-packages \
   packaging \
   requests \
   setuptools \
