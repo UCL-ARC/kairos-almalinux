@@ -12,7 +12,7 @@
   customManagers: [
     {
       customType: "regex",
-      fileMatch: ["^.*Dockerfile$"],
+      fileMatch: ["^.*Dockerfile.*$"],
       matchStrings: [
         "#\\s*renovate:\\s*datasource=(?<datasource>.+?)\\s+depName=(?<depName>.+?)\\nARG\\s+[A-Z_]+_VERSION=(?<currentValue>.+?)\\n",
       ],
