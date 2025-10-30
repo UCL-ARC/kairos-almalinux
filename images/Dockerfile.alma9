@@ -26,6 +26,7 @@ RUN /kairos-init \
 
 # hadolint ignore=DL3041
 RUN dnf update && dnf install -y \
+  cifs-utils \
   nmstate \
   python3-pip && \
   dnf clean all
