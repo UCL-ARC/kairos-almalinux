@@ -2,8 +2,8 @@ FROM quay.io/kairos/kairos-init:v0.7.0@sha256:d305713102d1d476bae919f71de1bc6ff0
 
 FROM almalinux:9@sha256:375aa0df1af54a6ad8f4dec9ec3e0df16feec385c4fb761ac5c5ccdd829d0170 AS base-kairos
 
-# renovate: datasource=github-releases depName=kairos-io/kairos-framework
 ARG KUBERNETES_DISTRO=k3s
+ARG K8S_VERSION_FLAG="--provider-${KUBERNETES_DISTRO}-version"
 # renovate: datasource=custom.k3s depName=k3s
 ARG KUBERNETES_VERSION=v1.35.0+k3s1
 ARG MODEL=generic
@@ -16,8 +16,8 @@ COPY --from=kairos-init /kairos-init /kairos-init
 RUN /kairos-init \
   -s install \
   --fips \
-  -k "${KUBERNETES_DISTRO}" \
-  --k8sversion "${KUBERNETES_VERSION}" \
+  -p "${KUBERNETES_DISTRO}" \
+  "${K8S_VERSION_FLAG}" "${KUBERNETES_VERSION}" \
   -l debug \
   -m "${MODEL}" \
   -t "${TRUSTED_BOOT}" \
@@ -39,8 +39,8 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/s
 RUN /kairos-init \
   -s init \
   --fips \
-  -k "${KUBERNETES_DISTRO}" \
-  --k8sversion "${KUBERNETES_VERSION}" \
+  -p "${KUBERNETES_DISTRO}" \
+  "${K8S_VERSION_FLAG}" "${KUBERNETES_VERSION}" \
   -l debug \
   -m "${MODEL}" \
   -t "${TRUSTED_BOOT}" \
