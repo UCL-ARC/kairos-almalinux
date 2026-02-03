@@ -10,10 +10,9 @@ ARG MODEL=generic
 ARG TRUSTED_BOOT=false
 ARG VERSION
 
-COPY --from=kairos-init /kairos-init /kairos-init
-
 # hadolint ignore=DL3059
-RUN /kairos-init \
+RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
+  /kairos-init \
   -s install \
   --fips \
   -p "${KUBERNETES_DISTRO}" \
@@ -46,7 +45,8 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/s
   rm get_helm.sh
 
 # hadolint ignore=DL3059
-RUN /kairos-init \
+RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
+  /kairos-init \
   -s init \
   --fips \
   -p "${KUBERNETES_DISTRO}" \
@@ -57,7 +57,5 @@ RUN /kairos-init \
   --version "${VERSION}"
 
 # hadolint ignore=DL3059
-RUN /kairos-init validate -t "${TRUSTED_BOOT}"
-
-# hadolint ignore=DL3059
-RUN rm /kairos-init
+RUN --mount=type=bind,from=kairos-init,src=/kairos-init,dst=/kairos-init \
+  /kairos-init validate -t "${TRUSTED_BOOT}"
