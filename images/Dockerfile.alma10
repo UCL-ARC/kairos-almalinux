@@ -2,8 +2,6 @@ FROM quay.io/kairos/kairos-init:v0.5.20@sha256:d90e8dd3d43f8c90b4cc9f76b1eb72828
 
 FROM almalinux:10@sha256:a81adef1de0ec017d2f483e6acedf6da4c060a93716192c23cac052386e48035 AS base-kairos
 
-# renovate: datasource=github-releases depName=kairos-io/kairos-framework
-ARG FRAMEWORK_VERSION=v2.21.0
 ARG KUBERNETES_DISTRO=k3s
 # renovate: datasource=custom.k3s depName=k3s
 ARG KUBERNETES_VERSION=v1.32.3+k3s1
