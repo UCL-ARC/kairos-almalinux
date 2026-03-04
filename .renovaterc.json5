@@ -1,6 +1,6 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  extends: ["github>UCL-ARC/.github//renovate/default-config.json5"],
+  extends: ["github>UCL-ARC/.github//renovate/default-config.json"],
   customDatasources: {
     k3s: {
       defaultRegistryUrlTemplate: "https://update.k3s.io/v1-release/channels",
@@ -15,6 +15,13 @@
       fileMatch: ["^.*Dockerfile.*$"],
       matchStrings: [
         "#\\s*renovate:\\s*datasource=(?<datasource>.+?)\\s+depName=(?<depName>.+?)\\nARG\\s+[A-Z_]+_VERSION=(?<currentValue>.+?)\\n",
+      ],
+    },
+    {
+      customType: "regex",
+      fileMatch: ["^.*release.*$"],
+      matchStrings: [
+        "#\\s*renovate:\\s*datasource=(?<datasource>.+?)\\s+depName=(?<depName>.+?)\\n\\s*-\\s+(?<currentValue>.+?)\\n",
       ],
     },
   ],

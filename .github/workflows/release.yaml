@@ -23,6 +23,11 @@ jobs:
         distro:
           - alma9
           - alma10
+        k3s:
+          # renovate: datasource=custom.k3s depName=k3s
+          - v1.34.4+k3s1
+          # renovate: datasource=custom.k3s depName=k3s
+          - v1.35.1+k3s1
 
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v4
