@@ -23,6 +23,13 @@ jobs:
         distro:
           - alma9
           - alma10
+        k3s_version:
+          # renovate: datasource=custom.k3s depName=k3s
+          - v1.33.8+k3s1
+          # renovate: datasource=custom.k3s depName=k3s
+          - v1.34.4+k3s1
+          # renovate: datasource=custom.k3s depName=k3s
+          - v1.35.1+k3s1
 
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v4
@@ -37,9 +44,8 @@ jobs:
         id: release-tag
         run: |
           kairos_init_version=$(grep "^FROM quay.io/kairos/kairos-init:" images/Dockerfile.${{ matrix.distro }} | cut -d':' -f2 | awk -F '[@]' '{print $1}')
-          k3s_version=$(grep "^ARG KUBERNETES_VERSION=" images/Dockerfile.${{ matrix.distro }} | cut -d'=' -f2)
           alma_major_version=$(grep "^FROM almalinux:" images/Dockerfile.${{ matrix.distro }} | cut -d':' -f2 | awk -F '[@]' '{print $1}')
-          tag="${alma_major_version}"-standard-amd64-generic-"${kairos_init_version}"-k3s"${k3s_version}"
+          tag="${alma_major_version}-standard-amd64-generic-${kairos_init_version}-k3s${{ matrix.k3s_version }}"
           release_tag="${{ github.event.release.tag_name }}"
           echo "tag=${tag//+/-}" >> "$GITHUB_OUTPUT"
           echo "kairos_version=${alma_major_version}.${release_tag}" >> "$GITHUB_OUTPUT"
