@@ -68,3 +68,4 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             "VERSION=${{ steps.release-tag.outputs.kairos_version }}"
+            "KUBERNETES_VERSION=${{ matrix.k3s_version }}"
